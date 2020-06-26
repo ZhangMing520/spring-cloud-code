@@ -28,6 +28,22 @@
 > 在浏览器上多次访问http://localhost:8674/hi?name=forezp， 
 > 浏览器交替显示：hi forezp,i am from port:8762 / hi forezp,i am from port:8763 （service-hi 启动多个实例）
 
+####  hystrix
+1. 断路器
+> 在微服务架构中，根据业务拆分成一个个服务，服务与服务之间可以相互调用（rpc），在spring cloud 中可以通过 ribbon+restTemplate 和 feign 调用。
+>为了保证高可用，单个服务通常会集群不熟。由于网络或者自身原因，服务并不能保证100%可用，如果单个服务出现问题，调用这个服务就会出现线程阻塞，
+>此时如果有大量的请求涌入，servlet容器的线程资源会被消耗完毕，导致服务瘫痪。服务与服务之前的依赖性，故障会传播，会对整个微服务系统造成灾难性的后果，
+>这就是服务器的“雪崩”效应
+
+> 当对特定的服务的调用的不可用达到一个阀值（Hystrix 是5秒20次） 断路器将会被打开
+
+![断路](service-hystrix/service-hystrix.png)
+
+2. ribbon 和 feign 熔断器
+- ribbon参见（service-hystrix）  feign 参见（service-feign）
+- feign是自带断路器的，在D版本的Spring Cloud之后，它没有默认打开。需要在配置文件中配置打开它 feign.hystrix.enabled=true
+- ribbon指定断路方法；feign指定断路类，类实现被@FeignClient注解的接口
+
 #### 注意
 1. 错误: 找不到或无法加载主类 com.example.eurekaclient.EurekaClientApplication
 ```sh 

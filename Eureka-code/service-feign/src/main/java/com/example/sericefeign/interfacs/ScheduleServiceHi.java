@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * {@link FeignClient } FeignClient（“服务名”）,来指定调用哪个服务
  */
-@FeignClient(value = "service-hi")
+@FeignClient(value = "service-hi", fallback = ScheduleServiceHiHystrix.class)
 public interface ScheduleServiceHi {
 
     /**
