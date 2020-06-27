@@ -184,6 +184,14 @@ span还有其他数据信息，比如摘要、时间戳时间、关键值诸注�
 
 ![高可用注册中心](eureka-server-ha/高可用注册中心.png)
 
+#### hystrix dashboard
+1. 简介
+> Hystrix Dashboard是作为断路器状态的一个组件，提供了数据监控和友好的图形化界面。监控断路器的Hystrix command
+
+> http://localhost:8673/actuator/hystrix.stream，可以看到一些具体的数据：![hystrix.stream数据](service-hystrix-dashboard/hystrix.stream数据.jpeg)
+> 在界面依次输入：http://localhost:8673/actuator/hystrix.stream 、2000 、miya ；点确定。![hystrix界面](service-hystrix-dashboard/hystrix界面.jpeg)
+> 在另一个窗口输入： http://localhost:8762/hi?name=forezp 重新刷新hystrix.stream网页，
+>你会看到良好的图形化界面：![hystrix.stream监控](service-hystrix-dashboard/hystrix.stream监控.jpeg)
 
 #### 注意
 1. 错误: 找不到或无法加载主类 com.example.eurekaclient.EurekaClientApplication
