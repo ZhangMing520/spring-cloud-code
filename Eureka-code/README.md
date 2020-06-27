@@ -163,6 +163,25 @@ span还有其他数据信息，比如摘要、时间戳时间、关键值诸注�
 
 > 浏览器访问：http://localhost:8989/hi
 
+
+#### 高可用配置中心
+1. 如何配置
+> you could use this configuration to test the peer awareness on a single host (there’s not much value in doing that in production) 
+> by manipulating /etc/hosts to resolve the host names.
+> 按照官方文档的指示，需要改变etc/hosts，linux系统通过vim /etc/hosts ,加上： 127.0.0.1 peer1 127.0.0.1 peer2
+
+
+2. 测试
+>java -jar eureka-server-0.0.1-SNAPSHOT.jar - -spring.profiles.active=peer1/java -jar eureka-server-0.0.1-SNAPSHOT.jar - -spring.profiles.active=peer2
+> 打开浏览器发现注册了service-hi，并且有个peer2节点，同理访问localhost:8769你会发现有个peer1节点,client只向8761注册，但是你打开8769，你也会发现，8769也有 client的注册信息
+
+> In some cases, it is preferable for Eureka to advertise the IP Addresses of services rather than the hostname. 
+>Set eureka.instance.preferIpAddress to true and when the application registers with eureka, it will use its IP Address rather than its hostname.
+> eureka.instance.preferIpAddress=true是通过设置ip让eureka让其他服务注册它。也许能通过改变host的方式。
+
+![高可用注册中心](eureka-server-ha/高可用注册中心.png)
+
+
 #### 注意
 1. 错误: 找不到或无法加载主类 com.example.eurekaclient.EurekaClientApplication
 ```sh 
