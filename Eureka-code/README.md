@@ -193,6 +193,18 @@ span还有其他数据信息，比如摘要、时间戳时间、关键值诸注�
 > 在另一个窗口输入： http://localhost:8762/hi?name=forezp 重新刷新hystrix.stream网页，
 >你会看到良好的图形化界面：![hystrix.stream监控](service-hystrix-dashboard/hystrix.stream监控.jpeg)
 
+
+#### Hystrix Turbine
+1. 简介
+> 看单个的Hystrix Dashboard的数据并没有什么多大的价值，要想看这个系统的Hystrix Dashboard数据就需要用到Hystrix Turbine。
+>Hystrix Turbine将每个服务Hystrix Dashboard数据进行了整合
+
+2. 测试
+> 依次开启eureka-server、service-hystrix-dashboard、service-turbine工程。 打开浏览器输入：http://localhost:8674/turbine.stream,
+>界面如下![turbine.stream数据](service-turbine/turbine.stream数据.jpeg)。依次请求：http://localhost:8673/hi?name=forezp、http://localhost:8674/hi?name=forezp
+>打开:http://localhost:8764/hystrix,输入监控流http://localhost:8764/turbine.stream ![监控数据填写](service-turbine/turbine.stream监控填写.jpeg)
+>点击monitor stream 进入页面：![监控界面数据](service-turbine/turbin.stream监控数据.jpeg)，可以看到这个页面聚合了2个service的hystrix dashboard数据。
+
 #### 注意
 1. 错误: 找不到或无法加载主类 com.example.eurekaclient.EurekaClientApplication
 ```sh 
