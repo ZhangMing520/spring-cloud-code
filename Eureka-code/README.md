@@ -103,9 +103,35 @@
 }
 ```
 
-5. config client使用config server 
+4. config client使用config server 
 > properties配置之后，直接 @Value 可以注入属性值
 ![获取属性流程](config-client/获取属性流程.png)
+
+5. 高可用的分布式配置中心（“高可用分布式配置中心”指明修改内容）
+
+
+#### Spring Cloud Bus
+1. 简介
+> 将分布式的节点用轻量的消息代理连接起来，她可以用于广播配置文件的更改或者服务之间的通讯，也可以用于监控。
+[rabbitmq安装](https://www.rabbitmq.com/)
+
+2. 测试 spring cloud bus
+> 依次启动eureka-server、config-server,config-client，访问http://localhost:8881/hi 浏览器显示：foo version 3，
+>这时我们去代码仓库将foo的值改为“foo version 4”，即改变配置文件foo的值。传统的做法，需要重启服务，才能达到配置文件的更新。
+>此时，我们只需要发送post请求：http://localhost:8881/actuator/bus-refresh，你会发现config-client会重新读取配置文件。
+> 这时我们再访问http://localhost:8881/hi 浏览器显示：foo version 4。
+
+> 另外，/actuator/bus-refresh接口可以指定服务，即使用”destination”参数，
+> 比如 “/actuator/bus-refresh?destination=config-client:**” 即刷新服务名为 config-client 的所有服务
+
+- curl -X POST http://localhost:8882/actuator/bus-refresh / curl -X POST http://localhost:8882/actuator/bus-refresh?destination=config-client
+- @RefreshScope 需要用在需要刷新的地方（需要获取最新的值等），而不是Application类上
+
+3. 消息架构图
+> 当git文件更改的时候，通过pc端用post 向端口为8882的config-client发送请求/bus/refresh／；
+>此时8882端口会发送一个消息，由消息总线向其他服务传递，从而使整个微服务集群都达到更新配置文件。
+![消息传递图](config-client-bus/bus架构图.png)
+
 
 #### 注意
 1. 错误: 找不到或无法加载主类 com.example.eurekaclient.EurekaClientApplication
