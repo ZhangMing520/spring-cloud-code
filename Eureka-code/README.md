@@ -69,6 +69,43 @@
 4. 测试zuul
 > 打开浏览器访问：http://localhost:8769/api-a/hi?name=forezp ;浏览器显示:hi forezp,i am from port:8762
 > 打开浏览器访问：http://localhost:8769/api-b/hi?name=forezp ;浏览器显示：hi forezp,i am from port:8762
+> 过滤功能见 MyFilter
+
+#### config server 
+1. 简介
+> 方便服务配置文件统一管理，实时更新。分布式配置中心组件spring cloud config ，它支持配置服务放在配置服务的内存中（即本地），也支持放在远程Git仓库中
+
+2. http请求地址和资源文件映射
+- {application}/{profile}/{label}
+- {application}-{profile}.yml
+- /{label}/{application}-{profile}.yml
+- /{application}-{profile}.properties
+- /{label}/{application}-{profile}.properties
+
+3. config server 测试
+> 远程仓库中有个文件config-client-dev.properties文件中有一个属性：foo = foo version 3.
+> 启动程序：访问 http://localhost:8888/config-client/dev/master
+```json
+{
+    "name":"config-client",
+    "profiles":[
+        "dev"],
+    "label":"master",
+    "version":"4988d99ed29b906cae6c7fb7ba7a02a41fe4d13e",
+    "state":null,
+    "propertySources":[
+        {
+            "name":"https://github.com/ZhangMing520/spring-cloud-code//respo/config-client-dev.properties",
+            "source":{
+                "foo":"foo version 3"
+            }
+        }]
+}
+```
+
+5. config client使用config server 
+> properties配置之后，直接 @Value 可以注入属性值
+![获取属性流程](config-client/获取属性流程.png)
 
 #### 注意
 1. 错误: 找不到或无法加载主类 com.example.eurekaclient.EurekaClientApplication
