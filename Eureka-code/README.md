@@ -44,6 +44,32 @@
 - feign是自带断路器的，在D版本的Spring Cloud之后，它没有默认打开。需要在配置文件中配置打开它 feign.hystrix.enabled=true
 - ribbon指定断路方法；feign指定断路类，类实现被@FeignClient注解的接口
 
+#### zuul
+1. zuul 简介
+> zuul的主要功能是路由转发与过滤。路由功能是微服务的一部分，比如/api/user转发到user服务，/api/shop转发到shop服务。
+>zuul默认和Ribbon结合实现了负载均衡的功能。
+
+2. 微服务治理组件
+> 服务注册与发现，服务消费，负载均衡，断路器，智能路由，配置管理等等。客户端请求首先经过负载均衡（zuul，Ngnix）,再到服务网关（zuul集群），
+>然后再到具体的服务。服务统一注册到高可用的服务注册中心集群，服务的所有的配置文件由配置服务管理，配置服务的配置文件放在git仓库
+![简单架构图](service-zuul/简单微服务架构.png)
+
+3. zuul包含功能
+- Authentication
+- Insights
+- Stress Testing 
+- Canary Testing 
+- Dynamic Routing
+- Service Migration
+- Load Shedding 
+- Security
+- Static Response Handling
+- Inactive/Active Traffic Management
+
+4. 测试zuul
+> 打开浏览器访问：http://localhost:8769/api-a/hi?name=forezp ;浏览器显示:hi forezp,i am from port:8762
+> 打开浏览器访问：http://localhost:8769/api-b/hi?name=forezp ;浏览器显示：hi forezp,i am from port:8762
+
 #### 注意
 1. 错误: 找不到或无法加载主类 com.example.eurekaclient.EurekaClientApplication
 ```sh 

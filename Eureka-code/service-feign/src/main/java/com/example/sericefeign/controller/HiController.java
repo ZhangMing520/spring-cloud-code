@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HiController {
 
+    /**
+     * 编译器报错 不用管
+     */
     @Autowired
     private ScheduleServiceHi scheduleServiceHi;
 
