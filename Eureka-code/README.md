@@ -179,6 +179,9 @@ span还有其他数据信息，比如摘要、时间戳时间、关键值诸注�
 >Set eureka.instance.preferIpAddress to true and when the application registers with eureka, it will use its IP Address rather than its hostname.
 > eureka.instance.preferIpAddress=true是通过设置ip让eureka让其他服务注册它。也许能通过改变host的方式。
 
+> Eureka-eserver peer1 8761,Eureka-server peer2 8769相互感应，当有服务注册时，两个Eureka-server是对等的，
+>它们都存有相同的信息，这就是通过服务器的冗余来增加可靠性，当有一台服务器宕机了，服务并不会终止，因为另一台服务存有相同的数据
+
 ![高可用注册中心](eureka-server-ha/高可用注册中心.png)
 
 
