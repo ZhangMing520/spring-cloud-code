@@ -132,6 +132,36 @@
 >此时8882端口会发送一个消息，由消息总线向其他服务传递，从而使整个微服务集群都达到更新配置文件。
 ![消息传递图](config-client-bus/bus架构图.png)
 
+#### Spring Cloud Sleuth
+1. 简介
+> 服务跟踪组件zipkin,spring cloud sleuth集成了zipkin组件。微服务架构上通过业务来划分服务，通过rest调用，对外暴露的一个接口，
+>可能需要很多个服务协同才能完成这个接口功能，如果链路上任何一个服务出现问题或者网络超时，都会导致接口调用失败。
+
+![接口调用](service-zipkin-hi/接口调用.png)
+
+２. 术语
+- span：基本工作单元，例如：在一个新建的span中发送一个rpc等同于发送一个回应请求给rpc，span通过一个64位id唯一标识，trace以另一个64位id标识，
+span还有其他数据信息，比如摘要、时间戳时间、关键值诸注释（tags）、span的id、以及进度id（通常是ip地址）span在不断的启动和停止，同时记录了时间信息，
+当你创建了一个span，你必须在未来的某个时刻停止它
+- trace：一些列spans组成的一个树状结构，例如：如果你正在跑一个分布式大数据工程，你可能需要创建一个trace
+- annotation：用来及时记录一个事件的存在，一些核心annotations用来定义一个请求的开始和结束
+    - cs：client sent 客户端发送一个请求，这个annotation描述了这个span的开始
+    - sr：server received 服务端获得请求并准备开始处理它，如果将其sr减去cs时间戳便可得到网络延迟
+    - ss：server sent 注解表明请求处理的完成（当请求返回客户端），如果ss减去sr时间戳便可得到服务端需要的处理请求时间
+    - cr：client received 表明span的结束，客户端成功接收到服务端的回复，如果cr减去cs时间戳便可得到客户端从服务端获取回复的所需时间
+
+![span和trace图形化过程](service-zipkin-hi/span和trace过程图形化.png)
+
+3. 测试
+> 三个工程组成：server-zipkin：主要作用是使用ZipkinServer的功能，收集调用数据并展示；一个service-zipkin-hi，一个service-zipkin-miya,
+>这两个service相互调用；只有相互调用了（没有相互调用的收集），server-zipkin才会收集数据的。
+
+![zipkin-server访问界面](service-zipkin-hi/zipkin-server界面.png)
+
+> spring Cloud为F版本的时候，已经不需要自己构建Zipkin Server了,[只需要下载jar即可](https://dl.bintray.com/openzipkin/maven/io/zipkin/java/zipkin-server/)
+> java -jar zipkin-server-2.10.1-exec.jar，访问浏览器localhost:9411
+
+> 浏览器访问：http://localhost:8989/hi
 
 #### 注意
 1. 错误: 找不到或无法加载主类 com.example.eurekaclient.EurekaClientApplication
