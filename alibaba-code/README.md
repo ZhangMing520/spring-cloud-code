@@ -28,3 +28,40 @@ nacos is starting，you can check the /data/nacos/logs/start.out
 bash -f startup.sh -m standalone
 ```
 [启动之后浏览器访问](http://localhost:8848/nacos)
+
+
+#### sentinel 
+1. 简介
+> 哨兵，为微服务提供流量控制，熔断降级的功能，和Hystrix提供的功能一样，可以有效的解决微服务调用产生的“雪崩”效应，
+>为微服务系统提供了稳定性的解决方法。通常情况，Hystrix采用线程池对服务的调用进行隔离，sentinel采用了用户线程对接口进行隔离，二者进行对比，
+>Hystrix是服务级别的隔离，sentinel提供了接口级别的隔离，sentinel隔离级别更加精细，另外sentinel直接使用用户线程进行限制，相对Hystrix的线程池隔离，
+>减少线程切换的开销。另外sentinel的dashboard提供了在线更改限流规则的配置，也更加的优化
+
+[sentinel dashboard下载地址](https://github.com/alibaba/Sentinel/releases)
+```bash 
+java -jar sentinel-dashboard-1.6.1.jar
+```
+![新增控制规则](nacos-provider-sentinel/新增规则.png)
+
+2. 测试
+> 多次快速访问nacos-provider的接口资源http://localhost:8762/hi，可以发现偶尔出现以下的信息:
+> Blocked by Sentinel (flow limiting)
+
+3. FeignClient中使用Sentinel
+> 被限流的时候FeignClient并不会调用nacos-provider的接口，而是在nacos-consumer工程里直接报错
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-openfeign</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        <version>0.9.0.RELEASE</version>
+    </dependency>
+</dependencies>
+```
+```properties
+feign.sentinel.enabled: true
+```
